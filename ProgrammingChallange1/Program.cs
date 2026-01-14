@@ -84,13 +84,12 @@ int MinCostPathDP(int[,] grid)
     }
     cost[0, 0] = grid[0, 0];
     var directions = new (int, int)[] { (1, 0), (0, 1), (-1, 0), (0, -1) };
-    var pq = new SortedSet<(int cost, int x, int y)>();
-    pq.Add((grid[0, 0], 0, 0));
+    var pq = new PriorityQueue<(int x, int y), int>();
+    pq.Enqueue((0, 0), grid[0, 0]);
     while (pq.Count > 0)
     {
-        var current = pq.Min;
-        pq.Remove(current);
-        int currentCost = current.cost;
+        var current = pq.Dequeue();
+        int currentCost = cost[current.x, current.y];
         int x = current.x;
         int y = current.y;
         foreach (var dir in directions)
@@ -103,7 +102,7 @@ int MinCostPathDP(int[,] grid)
                 if (newCost < cost[newX, newY])
                 {
                     cost[newX, newY] = newCost;
-                    pq.Add((newCost, newX, newY));
+                    pq.Enqueue((newX, newY), newCost);
                 }
             }
         }
